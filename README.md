@@ -11,7 +11,19 @@
 
 ## 简介
 
-**iGreat**是临摹[兰客导航](http://lackk.com/nav/)开发的网址导航系统，初始数据是作者从兰客复制或抓取的。**iGreat**是使用`Angular`和`SpringBoot`开发的一整套系统，包含前端网站和管理后台。
+**iGreat**是临摹[兰客导航](http://lackk.com/nav/)开发的网址导航系统，初始数据是作者从兰客复制或抓取的。**iGreat**是使用`Angular`和`SpringBoot`开发的一整套前后端分离的系统，包含前端网站和管理后台。
+
+## 项目结构
+
+**Resources**：截图及使用到的资源文件；
+
+**WebNav-Admin**：管理平台页面源代码；
+
+**WebNav**：网站页面源代码；
+
+**WebNav-Admin-API**：管理后台API服务源代码；
+
+**WebNav-API**：网站前端API服务源代码；
 
 ## 预览
 
@@ -53,8 +65,10 @@
 | WebNav初始数据库.sql            | 数据库           |
 | webnav-admin-1.0.0-SNAPSHOT.jar | 管理后台API程序  |
 | webnav-1.0.0-SNAPSHOT.jar       | 前端网站API程序  |
-| website.zip                     | 网站前端资源     |
-| admin.zip                       | 管理后台前端资源 |
+| WebNav.zip                      | 网站前端资源     |
+| WebNav-Admin.zip                | 管理后台前端资源 |
+
+> 这些文件可以在[Resources](https://github.com/njcwking/LackkNav/tree/master/Resources)目录下找到。
 
 ### 导入数据库
 
@@ -97,7 +111,7 @@ $ nohup java -jar webnav-admin-1.0.0-SNAPSHOT.jar --server.port=8889 &
 
 ### 部署网站页面
 
-将`website.zip`和`admin.zip`分别解压至`nginx`的html目录下，例如作者服务器的路径是`/usr/local/nginx/html`。
+将`WebNav.zip`和`WebNav-Admin.zip`分别解压至`nginx`的html目录下，例如作者服务器的路径是`/usr/local/nginx/html`。
 
 最终目录结构如图所示：
 
@@ -142,7 +156,7 @@ $ nohup java -jar webnav-admin-1.0.0-SNAPSHOT.jar --server.port=8889 &
    $ /usr/local/nginx/sbin/nginx -s reload
    ```
 
-3. 使用浏览器打开http://ip:port就可以访问对应的网页了。
+3. 使用浏览器打开<http://ip:port>就可以访问对应的网页了。
 
 > 配置过程中`try_files $uri $uri/ /index.html;`这条句柄是关键，不然子路由页面刷新后会出现无法加载的问题。具体可参考：<https://www.angular.cn/guide/deployment>
 
@@ -150,7 +164,7 @@ $ nohup java -jar webnav-admin-1.0.0-SNAPSHOT.jar --server.port=8889 &
 
 ## 编译
 
-有需要的朋友可以从github或这里下载源代码到本地修改后重新编译发布。
+有需要的朋友可以从[GitHub](https://github.com/njcwking/LackkNav)或这里下载源代码到本地修改后重新编译发布。
 
 ### 前端页面
 
