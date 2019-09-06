@@ -1,0 +1,106 @@
+<!-- NG-ZORRO -->
+<div class="container">
+  <div class="top">
+      <div class="topImage" [style.background-image]="curBanners">
+        <a class="logo"></a>
+        <div class="topItem" *ngIf="showSearch">
+          <div class="search">
+            <div class="left">
+              <img src="./assets/images/search.png" >
+            </div>
+            <div class="input">
+              <input #searchKey type="text" (keyup.enter)="onEnter(searchKey.value)"
+              [(ngModel)]="inputKey"/>
+            </div>
+            <div class="platform">
+                <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+                    {{searchPlatform.name}}
+                    <i nz-icon nzType="down"></i>
+                  </a>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                      <li nz-menu-item *ngFor="let item of searchPlatforms" (click)="selectPlatform(item)">{{item.name}}</li>
+                    </ul>
+                  </nz-dropdown-menu>
+            </div>
+          </div>
+          <ul class="searchRecommand">
+            <div class="search-group" *ngFor="let item of searchSiteUrls">
+              <li (click)="search(item.url)">
+                <img [attr.src]="item.icon"/>
+                <span>{{item.name}}</span>
+              </li>
+              <li *ngFor="let searchItem of item.hideList"(click)="search(searchItem.url)">
+                  <img [attr.src]="searchItem.icon"/>
+                  <span>{{searchItem.name}}</span>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <!-- <div class="weather">
+            <span class="city">南京</span><img class="today_icon icon" src="../assets/images/b1.png"><span class="today_text">多云34℃~26℃</span><span class="week">星期六</span><img src="../assets/images/b4.png" class="tomorrow_icon icon"><span class="tomorrow_text">雷阵雨33℃~27℃</span>
+          </div> -->
+      </div>
+  </div>
+  <div class="content">
+    <div class="common-site">
+      <ul class="common-ul">
+        <li class="common-item" *ngFor="let item of commonSite">
+          <a target="_blank" [attr.href]="item.url">
+            <img [attr.src]="item.icon" />
+            <span>{{item.name}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="m-top-menu">
+      <div class="menu-left">
+        <a class="menu-item" [ngClass]="{'active':item.id===selectTopCate.id}" *ngFor="let item of topCate" (click)="switchCate(item)">
+          <img [attr.src]="item.icon" />
+          <span>{{item.name}}</span>
+        </a>
+      </div>
+      <div class="switch-theme">
+        <i nz-icon nzType="left" onselectstart="return false" nzTheme="outline" class="prev" (click)="prevBanner()"></i>
+        <i nz-icon nzType="lock" nzTheme="outline" class="lock" (click)="isLockBanner=!isLockBanner" *ngIf="isLockBanner"></i>
+        <i nz-icon nzType="unlock" nzTheme="outline" class="lock" (click)="isLockBanner=!isLockBanner" *ngIf="!isLockBanner"></i>
+        <div class="info">
+          <a target="_blank">{{banners[bannerIndex]?.title}}</a>
+        </div>
+        <i onselectstart="return false" nz-icon nzType="right" nzTheme="outline" class="next" (click)="nextBanner()"></i>
+     </div>
+     <div class="page-setting">
+       <!-- <span>动画</span>
+       <nz-switch nzSize="small"></nz-switch> -->
+       <span>搜索</span>
+       <i nz-icon nzType="eye" nzTheme="outline" (click)="showSearch = !showSearch"></i>
+     </div>
+    </div>
+    <div class="site-collections">
+      <div class="cate-item" *ngFor="let item of childCateUrls">
+        <div class="title">
+          <div class="line" [ngStyle]="{'background':item.themeColor}"></div>
+          <span [ngStyle]="{'color':item.themeColor}">{{item.name}}</span>
+        </div>
+        <p class="desc"><span>{{item.intro}}</span></p>
+        <ul class="collections">
+          <li *ngFor="let itemUrl of item.urls">
+            <a [attr.href]="itemUrl.url" target="_blank">
+              <img [attr.src]="itemUrl.icon" />
+              <span>{{itemUrl.longName}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="float-link">
+    <div class="link-top">
+      <a (click)="scrollToTop()">TOP^</a>
+      <a *ngFor="let item of (floatUrls | floatUrlPipe:1)" target="_blank" [attr.href]="item.url" [ngStyle]="{'color':item.textColor}">{{item.name}}</a>
+    </div>
+    <div class="link-bottom">
+        <a *ngFor="let item of (floatUrls | floatUrlPipe:2)" target="_blank" [attr.href]="item.url" [ngStyle]="{'color':item.textColor}">{{item.name}}</a>
+    </div>
+  </div>
+</div>

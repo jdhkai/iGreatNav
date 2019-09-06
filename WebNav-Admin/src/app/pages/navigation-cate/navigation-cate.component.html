@@ -1,0 +1,141 @@
+<div class="content">
+    <!-- 添加的模态框 -->
+    <nz-modal [(nzVisible)]="showEditModel" nzTitle="编辑" (nzOnCancel)="showEditModel=false" nzWidth="600px" [nzFooter]="null"
+        nzMaskClosable="false" [nzKeyboard]="false" (nzOnCancel)="closeEdit(null)">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="saveEdit()">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>名称</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzErrorTip="请输入有效的名称" nzHasFeedback>
+                    <input nz-input formControlName="name" name="name" type="text" id="name" [(ngModel)]="nav.name">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="parentId" nzRequired>所属分类</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzErrorTip="请选择父级分类">
+                    <nz-select style="width: 120px;" [(ngModel)]="nav.parentId" nzPlaceHolder="Choose" formControlName="parentId">
+                        <nz-option [nzValue]="0" nzLabel="Root"></nz-option>
+                        <nz-option *ngFor="let item of level1Cate" [nzValue]="item.pkId" [nzLabel]="item.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="nav.parentId!=0">
+                <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>简述</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzErrorTip="请输入简述" nzHasFeedback>
+                    <input nz-input formControlName="intro" name="intro" type="text" id="intro" [(ngModel)]="nav.intro">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="nav.parentId!=0">
+                <nz-form-label [nzSpan]="6" nzFor="themeColor" nzRequired>主题颜色</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="请输入有效的颜色值" nzHasFeedback>
+                    <input nz-input formControlName="themeColor" name="themeColor" type="text" id="themeColor" [(ngModel)]="nav.themeColor">
+                </nz-form-control>
+                <img [style.background]="nav.themeColor" 
+                [(colorPicker)]="nav.themeColor" style="width: 30px; height: 30px; border: 1px solid #ffffff; cursor: pointer;margin-left: 10px;margin-top:5px;" >
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="orderValue" nzRequired>排序值</nz-form-label>
+                <nz-form-control [nzSpan]="14" >
+                    <nz-input-number [(ngModel)]="nav.orderValue" [nzStep]="1" formControlName="orderValue"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="nav.parentId===0">
+                <nz-form-label [nzSpan]="6" nzFor="icon" nzRequired>图片</nz-form-label>
+                <nz-form-control [nzSpan]="14"  nzErrorTip="请上传图片">
+                    <input nz-input formControlName="icon" type="text" [(ngModel)]="nav.icon">
+                    <nz-upload class="avatar-uploader" [nzAction]="uploadUrl"
+                        nzName="file" nzListType="picture-card" [nzShowUploadList]="false"
+                        nzFileType="image/png,image/jpeg,image/gif,image/bmp"
+                        nzAccept="image/png,image/jpeg,image/gif,image/bmp" [nzBeforeUpload]="beforeUpload"
+                        (nzChange)="handleChange($event)">
+                        <ng-container *ngIf="!nav.icon">
+                            <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                            <div class="ant-upload-text">点击选择</div>
+                        </ng-container>
+                        <img *ngIf="nav.icon" [src]="nav.icon" class="image" />
+                    </nz-upload>
+                    <nz-alert nzType="info" nzMessage="图片最大300KB,建议图片宽高比为1：1,像素为20x20" nzShowIcon></nz-alert>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control [nzSpan]="24" style="text-align: center;margin-top: 30px;">
+                    <button nz-button nzType="primary" [nzLoading]="isOkLoading">保存</button>
+                    <button nz-button (click)="closeEdit($event)" style="margin-left: 12px;">取消</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+
+    <div class="tableHead" #tableHead>
+        <!-- 操作按钮 -->
+        <div class="operate-button">
+            <button nz-button nzType="primary" nzShape="circle" (click)="refresh()"><i nz-icon
+                    nzType="reload"></i></button>
+            <button nz-button nzType="primary" (click)="edit(null)">新增</button>
+            <button nz-button nzType="danger" (click)="batchDelete()">批量删除</button>
+            <!-- 搜索表格的过滤条件 -->
+            <div class="filter-condition">
+                <nz-input-group nzSearch nzSize="default" [nzAddOnAfter]="suffixButton">
+                    <input type="text" nz-input [(ngModel)]="keyword" placeholder="请输入关键词" (keyup.enter)="search()"/>
+                </nz-input-group>
+                <ng-template #suffixButton>
+                    <button nz-button nzType="primary" nzSize="default" nzSearch (click)="search()">Search</button>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <!-- 表格窗口，包括表格和分页控件 -->
+    <div class="table-container">
+        <nz-table #basicTable nzBordered [nzData]="listOfMapData" [nzFrontPagination]="false" nzShowPagination="false"
+            [nzLoading]="isLoading" [nzLoadingDelay]="2">
+            <thead>
+                <tr>
+                    <th [nzShowCheckbox]="false" [nzWidth]="'70px'">选择</th>
+                    <th>名称</th>
+                    <th>图标</th>
+                    <th>主题颜色</th>
+                    <th>简述</th>
+                    <th [nzWidth]="'20%'">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let data of listOfMapData">
+                    <ng-container *ngFor="let item of mapOfExpandedData[data.pkId]">
+                        <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+                            <td [nzShowCheckbox]="true" [(nzChecked)]="mapOfCheckedId[item.pkId]"></td>
+                            <td
+                            [nzIndentSize]="item.treeLevel * 20"
+                            [nzShowExpand]="!!item.children"
+                            [(nzExpand)]="item.expand"
+                            (nzExpandChange)="collapse(mapOfExpandedData[item.pkId], item, $event)"
+                            >
+                            {{ item.name }}
+                            </td>
+                            <td>
+                                <img class="tableImg" [attr.src]="item.icon" *ngIf="item.level===1; else elseImg" /> 
+                                <ng-template #elseImg>-</ng-template>
+                            </td>
+                            <td>
+                                <div *ngIf="item.level===2; else elseLevel">
+                                    <img [ngStyle]="{'background': item.themeColor}" width="20px" height="20px"/>  {{item.themeColor}}
+                                </div>
+                                <ng-template #elseLevel>-</ng-template>
+                            </td>
+                            <td>
+                                <div *ngIf="item.level===2; else elseIntro">
+                                    {{item.intro}}
+                                </div>
+                                <ng-template #elseIntro>-</ng-template>
+                                
+                            </td>
+                            <td>
+                                <a (click)="edit(item)">编辑</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a style="color:red;" (click)="delete(item.pkId)">删除</a>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </nz-table>
+    </div>
+</div>

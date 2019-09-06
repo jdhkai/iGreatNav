@@ -1,0 +1,57 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a routerLink="/welcome">
+        <img src="./assets/images/logo.png" alt="logo">
+        <h1>爱古瑞网址导航</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="基础配置" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/banner">轮播图管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/friend-chain">友链管理</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="导航配置" nzIcon="link">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/navigation-cate">分类管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/navigation-url">网址管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/search-navigation">搜索管理</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <i class="trigger"
+               nz-icon
+               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></i>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

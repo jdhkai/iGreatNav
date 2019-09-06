@@ -1,0 +1,113 @@
+<div class="content">
+    <!-- 添加的模态框 -->
+    <nz-modal [(nzVisible)]="showEditModel" nzTitle="编辑" (nzOnCancel)="showEditModel=false" nzWidth="600px" [nzFooter]="null"
+        nzMaskClosable="false" [nzKeyboard]="false" (nzOnCancel)="closeEdit(null)">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="saveEdit()">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>名称</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzErrorTip="请输入有效的名称" nzHasFeedback>
+                    <input nz-input formControlName="name" name="name" type="text" id="name" [(ngModel)]="friendChain.name">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="url" nzRequired>链接地址</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzErrorTip="请输入有效的链接地址" nzHasFeedback>
+                    <input nz-input formControlName="url" name="url" type="url" id="url" [(ngModel)]="friendChain.url">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="textColor" nzRequired>文字颜色</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="请输入有效的颜色值" nzHasFeedback>
+                    <input nz-input formControlName="textColor" name="textColor" type="text" id="textColor" [(ngModel)]="friendChain.textColor">
+                </nz-form-control>
+                <img [style.background]="friendChain.textColor" 
+                [(colorPicker)]="friendChain.textColor" style="width: 30px; height: 30px; border: 1px solid #ffffff; cursor: pointer;margin-left: 10px;margin-top:5px;" >
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="level" nzRequired>显示位置</nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <nz-select style="width: 120px;" [(ngModel)]="friendChain.level" [ngModelOptions]="{standalone: true}">
+                        <nz-option nzValue="1" nzLabel="上半部分"></nz-option>
+                        <nz-option nzValue="2" nzLabel="下半部分"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="orderValue" nzRequired>排序值</nz-form-label>
+                <nz-form-control [nzSpan]="14" >
+                    <nz-input-number [(ngModel)]="friendChain.orderValue" [nzStep]="1" formControlName="orderValue"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control [nzSpan]="24" style="text-align: center;margin-top: 30px;">
+                    <button nz-button nzType="primary" [nzLoading]="isOkLoading">保存</button>
+                    <button nz-button (click)="closeEdit($event)" style="margin-left: 12px;">取消</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+
+    <div class="tableHead" #tableHead>
+        <!-- 操作按钮 -->
+        <div class="operate-button">
+            <button nz-button nzType="primary" nzShape="circle" (click)="refresh()"><i nz-icon
+                    nzType="reload"></i></button>
+            <button nz-button nzType="primary" (click)="edit(null)">新增</button>
+            <button nz-button nzType="danger" (click)="batchDelete()">批量删除</button>
+            <nz-select style="width: 120px;" [(ngModel)]="level" (ngModelChange)="optionsChange()">
+                <nz-option nzValue="0" nzLabel="全部"></nz-option>
+                <nz-option nzValue="1" nzLabel="上半部分"></nz-option>
+                <nz-option nzValue="2" nzLabel="下半部分"></nz-option>
+            </nz-select>
+            <!-- 搜索表格的过滤条件 -->
+            <div class="filter-condition">
+                <nz-input-group nzSearch nzSize="default" [nzAddOnAfter]="suffixButton">
+                    <input type="text" nz-input [(ngModel)]="keyword" placeholder="请输入关键词" (keyup.enter)="search()" />
+                </nz-input-group>
+                <ng-template #suffixButton>
+                    <button nz-button nzType="primary" nzSize="default" nzSearch (click)="search()">Search</button>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <!-- 表格窗口，包括表格和分页控件 -->
+    <div class="table-container">
+        <ng-template #totalTemplate let-total> 共 {{ totalCount }} 条 </ng-template>
+        <nz-table #basicTable nzBordered [nzData]="tableData" [nzShowTotal]="totalTemplate" [nzFrontPagination]="false"
+            [nzLoading]="isLoading" [nzLoadingDelay]="2" [nzPageSizeOptions]="[5,10,20,30,40,50]"
+            [nzShowQuickJumper]="true" [nzShowSizeChanger]="true" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+            [nzTotal]="totalCount" (nzPageIndexChange)="requestList()" (nzPageSizeChange)="requestList()">
+            <thead>
+                <tr>
+                    <th [nzShowCheckbox]="false" [nzWidth]="'70px'">选择</th>
+                    <th>名称</th>
+                    <th [nzWidth]="'30%'">链接地址</th>
+                    <th [nzWidth]="'15%'">字体颜色</th>
+                    <th>显示位置</th>
+                    <th [nzWidth]="'20%'">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of tableData">
+                    <td [nzShowCheckbox]="true" [(nzChecked)]="mapOfCheckedId[data.pkId]">
+                    </td>
+                    <td>{{data.name}}</td>
+                    <td>
+                        <a target="_blank" [attr.href]="data.url">{{data.url}}</a>
+                    </td>
+                    <td>
+                        <img [ngStyle]="{'background': data.textColor}" width="20px" height="20px"/>  {{data.textColor}}
+                    </td>
+                    <td>
+                        {{data.level===1?"TOP":"BOTTOM"}}
+                    </td>
+                    <td>
+                        <a (click)="edit(data)">编辑</a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a style="color:red;" (click)="delete(data.pkId)">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</div>

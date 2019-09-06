@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/WebNav?charset=utf8mb4&useSSL=false
+    username: root
+    password: 4ri55vqMOp)s
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+  jackson:
+    #返回指定格式的时间
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      # 返回格式化好的Json串
+      indent-output: true
+      #返回时间戳
+      #write-dates-as-timestamps: true
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss
+  http:
+    encoding:
+      charset: UTF-8
+  # 配置热部署
+  devtools:
+    restart:
+      # 热部署生效
+      enabled: true
+      # 设置重启的目录
+      additional-paths: src/main/java/
+      # classpath目录下的WEB-INF文件夹内容修改不重启
+      exclude: WEB-INF/**
+
+server:
+  port: 8888
+  servlet:
+    context-path: /web-api
+
+debug: false
+logging:
+  config: classpath:logback/logback-spring.xml
