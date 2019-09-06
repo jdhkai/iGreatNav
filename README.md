@@ -1,5 +1,7 @@
 <h1 align="center"><a href="" target="_blank">iGreat</a></h1>
+>
 > iGreat是使用Angular开发的个人网址导航系统，具备完整的前后台，您可以拿来部署自己收藏的网址。
+> 
 
 <p align="center">
 <a href="#"><img alt="JDK" src="https://img.shields.io/badge/JDK-1.8-yellow.svg?style=flat-square"/></a>
