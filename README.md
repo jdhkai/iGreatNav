@@ -167,7 +167,7 @@ $ nohup java -jar webnav-admin-1.0.0-SNAPSHOT.jar --server.port=8889 &
 
 ## 编译
 
-有需要的朋友可以从[GitHub](https://github.com/njcwking/LackkNav)或这里下载源代码到本地修改后重新编译发布。
+有需要的朋友可以从[GitHub](https://github.com/njcwking/LackkNav)或[这里](https://github.com/njcwking/iGreatNav/releases/tag/V1.0.0)下载源代码到本地修改后重新编译发布。
 
 ### 前端页面
 
